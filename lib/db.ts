@@ -7,16 +7,21 @@ import { headers } from "next/headers";
 //db connection
 const pool = new Pool({
    host: process.env.POSTGRES_HOST,
-   user: process.env.POSTGRES_USER,
-   password: process.env.POSTGRES_PASSWORD,
-   port: process.env.POSTGRES_PORT ,
+      user: process.env.POSTGRES_USER,
+      port: process.env.POSTGRES_PORT,
+      password: process.env.POSTGRES_PASSWORD,
 });
 
 // get favorites list
 export async function getFavorites() {
-   const session = await auth.api.getSession({
-      headers: await headers(),
-   });
+   let session;
+   try {
+      session = await auth.api.getSession({
+         headers: await headers(),
+      });
+   } catch (error) {
+      console.error(error.message);
+   }
    if (!session) {
       return undefined;
    }
@@ -33,7 +38,17 @@ export async function getFavorites() {
 
 // add to favorites
 export async function addToFavorite(id: number) {
-   const session = await auth.api.getSession({ headers: await headers() });
+     let session;
+   try {
+      session = await auth.api.getSession({
+         headers: await headers(),
+      });
+   } catch (error) {
+      console.error(error.message);
+   }
+   if (!session) {
+      return;
+   }
    try {
       const result = await pool.query(
          "INSERT INTO favorite (user_id, pokemon_id) VALUES ($1, $2)",
@@ -46,7 +61,17 @@ export async function addToFavorite(id: number) {
 
 // remove from favorites
 export async function removeFromFavorite(id: number) {
-   const session = await auth.api.getSession({ headers: await headers() });
+     let session;
+   try {
+      session = await auth.api.getSession({
+         headers: await headers(),
+      });
+   } catch (error) {
+      console.error(error.message);
+   }
+   if (!session) {
+      return;
+   }
    try {
       const result = pool.query(
          "DELETE FROM favorite WHERE user_id = $1 AND pokemon_id = $2",
@@ -59,7 +84,7 @@ export async function removeFromFavorite(id: number) {
 
 export async function toggleFavorites(id) {
    const favorites = await getFavorites();
-   let isFavorites =  false; 
+   let isFavorites = false;
 
    for (let favorite of favorites) {
       if (favorite.pokemon_id === id) {
