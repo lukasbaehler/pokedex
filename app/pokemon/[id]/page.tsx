@@ -9,10 +9,19 @@ import EvolutionChain from "../../../components/EvolutionChain";
 export default async function Page(props: { params: Promise<{ id: string }> }) {
    const params = await props.params;
    const id = Number(params.id);
-   const pokemon = await fetchPokemon(id);
+   let pokemon;
+   try {
+      pokemon = await fetchPokemon(id);
+   } catch (error) {
+      console.error(error.message);
+   }
    const types = pokemon.types.map((type, index) => (
       <TypeBadge key={pokemon.name + "-type-" + index} type={type.type.name} />
    ));
+
+   if(!pokemon) {
+      return(<div>Pokémon not found.</div>)
+   }
 
    return (
       <section className="flex flex-col mx-auto">
@@ -21,7 +30,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                {pokemon.name} - {pokemon.id}
             </h1>
             <FavoriteButton id={id} />
-            <CompareButton id={id}/>
+            <CompareButton id={id} />
          </div>
          <div className="flex justify-center items-center">
             {id > 1 ? (
@@ -56,7 +65,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                />
             ))}
          </ul>
-         <EvolutionChain id={id}/>
+         <EvolutionChain id={id} />
          <ul className="flex flex-col items-center">
             {pokemon.moves.map((move, index) => (
                <li key={index}>{move.move.name}</li>

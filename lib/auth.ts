@@ -7,7 +7,7 @@ export const auth = betterAuth({
       host: process.env.POSTGRES_HOST,
       user: process.env.POSTGRES_USER,
       port: process.env.POSTGRES_PORT,
-      password: process.env.POSTGRES_PW,
+      password: process.env.POSTGRES_PASSWORD,
    }),
    emailAndPassword: {
     enabled: true,
