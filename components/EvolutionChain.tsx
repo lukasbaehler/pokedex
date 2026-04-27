@@ -2,16 +2,28 @@ import PokemonCard from "./PokemonCard";
 import { toggleFavorites, getFavorites } from "../lib/db";
 
 export default async function EvolutionChain({ id }) {
-   const speciesResponds = await fetch(
-      `https://pokeapi.co/api/v2/pokemon-species/${id}`,
-   );
-   const speciesData = await speciesResponds.json();
-   const evolutionChainResponds = await fetch(speciesData.evolution_chain.url);
-   const evolutionChainData = await evolutionChainResponds.json();
-   const favoritesRows = await getFavorites();
+   let evolutionChainData;
+   try {
+      const speciesResponds = await fetch(
+         `https://pokeapi.co/api/v2/pokemon-species/${id}`,
+      );
+      const speciesData = await speciesResponds.json();
+      const evolutionChainResponds = await fetch(
+         speciesData.evolution_chain.url,
+      );
+      evolutionChainData = await evolutionChainResponds.json();
+   } catch (error) {
+      console.error(error.message);
+   }
+   let favoritesRows;
+   try {
+      favoritesRows = await getFavorites();
+   } catch (error) {
+      console.error(error.message);
+   }
    let favorites = [];
 
-   for(let favoriteRow of favoritesRows) {
+   for (let favoriteRow of favoritesRows) {
       favorites.push(favoriteRow.pokemon_id);
    }
 
@@ -40,15 +52,24 @@ export default async function EvolutionChain({ id }) {
    );
 
    extractPokeomnUrl(evolutionChainData.chain);
-   const pokemonDetails = await Promise.all(
-      toFetch.map((url) => fetch(url).then((r) => r.json())),
-   );
+   let pokemonDetails;
+   try {
+      pokemonDetails = await Promise.all(
+         toFetch.map((url) => fetch(url).then((r) => r.json())),
+      );
+   } catch (error) {
+      console.error(error.message);
+   }
 
    const pokemonCards = pokemonDetails
       .filter((poke) => poke.id <= 151)
       .map((poke) => (
          <div key={poke.name + "-evolution-chain"}>
-            <PokemonCard pokemon={poke}  onToggleFav={toggleFavorites} isFavourit={favorites.includes(poke.id)}/>
+            <PokemonCard
+               pokemon={poke}
+               onToggleFav={toggleFavorites}
+               isFavourit={favorites.includes(poke.id)}
+            />
          </div>
       ));
 
