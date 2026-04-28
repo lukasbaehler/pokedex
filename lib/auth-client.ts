@@ -1,5 +1,5 @@
-"use client";
+
 import { createAuthClient } from "better-auth/react";
 export const authClient = createAuthClient({
-    baseURL: `https://${window.location.hostname}`,
+    baseURL: `https://pokedex-eosin-kappa.vercel.app`,
 });
