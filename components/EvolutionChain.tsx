@@ -23,9 +23,9 @@ export default async function EvolutionChain({ id }) {
    }
    let favorites = [];
 
-   for (let favoriteRow of favoritesRows) {
+   if (favoritesRows){for (let favoriteRow of favoritesRows) {
       favorites.push(favoriteRow.pokemon_id);
-   }
+   }}
 
    let toFetch = [];
 

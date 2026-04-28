@@ -15,13 +15,14 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
    } catch (error) {
       console.error(error.message);
    }
-   const types = pokemon.types.map((type, index) => (
-      <TypeBadge key={pokemon.name + "-type-" + index} type={type.type.name} />
-   ));
-
+   
    if(!pokemon) {
       return(<div>Pokémon not found.</div>)
    }
+
+   const types = pokemon.types.map((type, index) => (
+      <TypeBadge key={pokemon.name + "-type-" + index} type={type.type.name} />
+   ));
 
    return (
       <section className="flex flex-col mx-auto">

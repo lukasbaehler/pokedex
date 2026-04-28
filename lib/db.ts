@@ -33,6 +33,7 @@ export async function getFavorites() {
       return result.rows;
    } catch (error) {
       console.error(error);
+      return undefined;
    }
 }
 
@@ -85,6 +86,10 @@ export async function removeFromFavorite(id: number) {
 export async function toggleFavorites(id) {
    const favorites = await getFavorites();
    let isFavorites = false;
+
+   if (!favorites) {
+      return;
+   }
 
    for (let favorite of favorites) {
       if (favorite.pokemon_id === id) {
