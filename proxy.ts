@@ -13,6 +13,6 @@ export default async function proxy(request: NextRequest) {
       (request.nextUrl.pathname.startsWith("/favorites") ||
          request.nextUrl.pathname.startsWith("/share"))
    ) {
-      return NextResponse.redirect("http://localhost:3000/login");
+      return NextResponse.redirect("http://pokedex-eosin-kappa.vercel.app/login");
    }
 }
