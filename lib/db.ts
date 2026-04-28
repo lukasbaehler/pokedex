@@ -6,10 +6,10 @@ import { headers } from "next/headers";
 
 //db connection
 const pool = new Pool({
-   host: process.env.POSTGRES_HOST,
-      user: process.env.POSTGRES_USER,
-      port: process.env.POSTGRES_PORT,
-      password: process.env.POSTGRES_PASSWORD,
+   connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 // get favorites list
